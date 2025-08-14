@@ -1,1 +1,1 @@
-No instructions found. Please look around the filesystem and update me
+React + TypeScript + Vite + TailwindCSS + shadcn/ui プロジェクトです。朝活アプリの画面モックを作成します。dependencies: react, react-dom, tailwindcss, lucide-react, class-variance-authority, clsx, tailwind-merge。開発サーバーは npm run dev で起動。
