@@ -79,7 +79,7 @@ const ReminderScreen = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-400 via-yellow-400 to-amber-300 p-6 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-orange-400 via-yellow-400 to-amber-300 p-4 md:p-6 flex items-center justify-center">
         <div className="bg-white rounded-2xl p-8 shadow-2xl">
           <div className="flex items-center gap-3">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
@@ -92,7 +92,7 @@ const ReminderScreen = () => {
 
   if (todayTasks.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-400 via-yellow-400 to-amber-300 p-6">
+      <div className="min-h-screen bg-gradient-to-br from-orange-400 via-yellow-400 to-amber-300 p-4 md:p-6">
         <div className="max-w-md mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
           <div className="bg-gradient-to-r from-orange-500 to-yellow-500 p-6 text-white">
             <div className="flex items-center gap-3 mb-2">
@@ -117,7 +117,7 @@ const ReminderScreen = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-400 via-yellow-400 to-amber-300 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-orange-400 via-yellow-400 to-amber-300 p-4 md:p-6">
       <div className="max-w-md mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
         <div className="bg-gradient-to-r from-orange-500 to-yellow-500 p-6 text-white">
           <div className="flex items-center gap-3 mb-2">

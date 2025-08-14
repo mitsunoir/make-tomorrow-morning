@@ -2,50 +2,37 @@ import { useState } from 'react'
 import TaskSettingScreen from './components/TaskSettingScreen'
 import ReminderScreen from './components/ReminderScreen'
 import CompletedTasksScreen from './components/CompletedTasksScreen'
+import BottomNavigation from './components/BottomNavigation'
+import TopNavigation from './components/TopNavigation'
 import './App.css'
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState<'setting' | 'reminder' | 'completed'>('setting')
 
   return (
-    <div className="App">
-      {/* デモ用の画面切り替えボタン */}
-      <div className="fixed top-4 right-4 z-50 flex gap-2">
-        <button
-          onClick={() => setCurrentScreen('setting')}
-          className={`px-3 py-2 rounded-lg text-xs font-medium ${
-            currentScreen === 'setting'
-              ? 'bg-blue-600 text-white'
-              : 'bg-white text-gray-700 border border-gray-300'
-          }`}
-        >
-          タスク設定
-        </button>
-        <button
-          onClick={() => setCurrentScreen('reminder')}
-          className={`px-3 py-2 rounded-lg text-xs font-medium ${
-            currentScreen === 'reminder'
-              ? 'bg-orange-500 text-white'
-              : 'bg-white text-gray-700 border border-gray-300'
-          }`}
-        >
-          リマインド
-        </button>
-        <button
-          onClick={() => setCurrentScreen('completed')}
-          className={`px-3 py-2 rounded-lg text-xs font-medium ${
-            currentScreen === 'completed'
-              ? 'bg-emerald-500 text-white'
-              : 'bg-white text-gray-700 border border-gray-300'
-          }`}
-        >
-          完了一覧
-        </button>
+    <div className="App min-h-screen bg-gray-50">
+      {/* PC用上部ナビゲーション (md以上で表示) */}
+      <div className="hidden md:block">
+        <TopNavigation 
+          currentScreen={currentScreen}
+          onScreenChange={setCurrentScreen}
+        />
       </div>
 
-      {currentScreen === 'setting' && <TaskSettingScreen />}
-      {currentScreen === 'reminder' && <ReminderScreen />}
-      {currentScreen === 'completed' && <CompletedTasksScreen />}
+      {/* メインコンテンツ */}
+      <div className="pb-20 md:pb-0"> {/* モバイル時のみボトムナビ分の余白 */}
+        {currentScreen === 'setting' && <TaskSettingScreen />}
+        {currentScreen === 'reminder' && <ReminderScreen />}
+        {currentScreen === 'completed' && <CompletedTasksScreen />}
+      </div>
+
+      {/* モバイル用ボトムナビゲーション (md未満で表示) */}
+      <div className="md:hidden">
+        <BottomNavigation 
+          currentScreen={currentScreen}
+          onScreenChange={setCurrentScreen}
+        />
+      </div>
     </div>
   )
 }
