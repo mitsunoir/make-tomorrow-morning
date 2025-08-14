@@ -1,10 +1,13 @@
 import { useState } from 'react'
-import { Moon, Check } from 'lucide-react'
+import { Moon, Check, Save } from 'lucide-react'
+import { taskService } from '../lib/database'
 
 const TaskSettingScreen = () => {
   const [selectedTasks, setSelectedTasks] = useState<string[]>([])
   const [customTask, setCustomTask] = useState('')
   const [inputMode, setInputMode] = useState<'list' | 'custom'>('list')
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveMessage, setSaveMessage] = useState('')
 
   const predefinedTasks = [
     '美術館に行く',
@@ -25,10 +28,32 @@ const TaskSettingScreen = () => {
     )
   }
 
-  const handleConfirm = () => {
-    const tasks = inputMode === 'list' ? selectedTasks : [customTask]
-    console.log('確定されたタスク:', tasks)
-    // ここで実際の保存処理を実装
+  const handleConfirm = async () => {
+    setIsSaving(true)
+    setSaveMessage('')
+    
+    try {
+      const taskTitles = inputMode === 'list' ? selectedTasks : [customTask]
+      const tasksToSave = taskTitles.map(title => ({
+        title,
+        type: inputMode === 'list' ? 'predefined' as const : 'custom' as const,
+        isCompleted: 0 // number型: 0 = false, 1 = true
+      }))
+
+      await taskService.saveTomorrowTasks(tasksToSave)
+      setSaveMessage('明日の朝活タスクを保存しました！')
+      
+      // 成功後にフォームをリセット
+      setSelectedTasks([])
+      setCustomTask('')
+    } catch (error) {
+      console.error('タスク保存エラー:', error)
+      setSaveMessage('保存に失敗しました。もう一度お試しください。')
+    } finally {
+      setIsSaving(false)
+      // 3秒後にメッセージを消す
+      setTimeout(() => setSaveMessage(''), 3000)
+    }
   }
 
   return (
@@ -109,16 +134,38 @@ const TaskSettingScreen = () => {
             </div>
           )}
 
+          {/* 保存メッセージ */}
+          {saveMessage && (
+            <div className={`mb-4 p-3 rounded-lg text-center font-medium ${
+              saveMessage.includes('失敗')
+                ? 'bg-red-50 text-red-700 border border-red-200'
+                : 'bg-green-50 text-green-700 border border-green-200'
+            }`}>
+              {saveMessage}
+            </div>
+          )}
+
           {/* 確定ボタン */}
           <button
             onClick={handleConfirm}
             disabled={
+              isSaving ||
               (inputMode === 'list' && selectedTasks.length === 0) ||
               (inputMode === 'custom' && customTask.trim() === '')
             }
-            className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg rounded-lg hover:from-blue-700 hover:to-purple-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+            className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg rounded-lg hover:from-blue-700 hover:to-purple-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
           >
-            確定する
+            {isSaving ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                保存中...
+              </>
+            ) : (
+              <>
+                <Save size={20} />
+                確定する
+              </>
+            )}
           </button>
         </div>
       </div>
